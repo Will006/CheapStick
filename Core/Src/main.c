@@ -29,14 +29,15 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define BUF_FORWARD_DOUBLE_PACKET_SIZE 108
-#define BUF_FORWARD_PACKET_SIZE 54
-#define BUF_TRANSMIT_PACKET_SIZE 52
+#define BUF_PACKET_SIZE 104
+#define BUF_PACKET_SIZE_HALF 52
+#define BUF_PACKET_SIZE_HALF_MINOR 51
 #define HT8574_ADDRESS 112
 /* USER CODE END PTD */
 
@@ -63,10 +64,15 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-	uint8_t msgBuf[BUF_FORWARD_DOUBLE_PACKET_SIZE];
+	uint8_t msgBuf[BUF_PACKET_SIZE];
 	uint8_t bootMsg[] = "Booted\r\n";
 	uint8_t noSDCardMsg[] = "No SD Card, Please Insert and restart\r\n";
+	
+	
+	
 	uint8_t TX_ON[2];
+	
+	
 /* USER CODE END 0 */
 
 /**
@@ -108,6 +114,24 @@ int main(void)
   MX_USART2_UART_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+	
+	//Bring High CS
+	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_12,GPIO_PIN_SET);
+	
+	//Enable TX mode
+	TX_ON[0]=0x80;
+	HAL_I2C_Master_Transmit(&hi2c1,HT8574_ADDRESS,TX_ON,1,100);
+	
+	//Create tets Buffer
+	memcpy(msgBuf, "123.123456,123.123456,12345,123456,123,123,123,3.3",50);
+	msgBuf[50] = '\r';
+	msgBuf[51] = '\n';
+	
+	memcpy(msgBuf+BUF_PACKET_SIZE_HALF, "333.333333,333.333333,12345,123456,123,123,123,7.7",50);
+	msgBuf[102] = '\r';
+	msgBuf[103] = '\n';
+	
+	HAL_Delay(2000);
 
   /* USER CODE END 2 */
 
@@ -116,9 +140,15 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+		//transmit first half of buffer
+		
+	//Bring Low CS
+	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_12,GPIO_PIN_RESET);
+		
+	HAL_SPI_Transmit(&hspi1,msgBuf,BUF_PACKET_SIZE_HALF,1000);
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_SET);
 	HAL_Delay(2000);
+	//HAL_SPI_Transmit_DMA(&hspi1,msgBuf+BUF_PACKET_SIZE_HALF,BUF_PACKET_SIZE_HALF);
 	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_RESET);
 	HAL_Delay(2000);
     /* USER CODE BEGIN 3 */

@@ -46,3 +46,5 @@ cheapstick\main.o: ../Core/Inc/spi.h
 cheapstick\main.o: ../Core/Inc/tim.h
 cheapstick\main.o: ../Core/Inc/usart.h
 cheapstick\main.o: ../Core/Inc/gpio.h
+cheapstick\main.o: G:\Program Files\ARM\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+cheapstick\main.o: G:\Program Files\ARM\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
