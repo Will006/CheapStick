@@ -11,6 +11,7 @@
 "cheapstick\usart.o"
 "cheapstick\stm32f4xx_it.o"
 "cheapstick\stm32f4xx_hal_msp.o"
+"cheapstick\sx126x.o"
 "cheapstick\stm32f4xx_hal_adc.o"
 "cheapstick\stm32f4xx_hal_adc_ex.o"
 "cheapstick\stm32f4xx_ll_adc.o"

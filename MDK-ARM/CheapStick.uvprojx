@@ -805,6 +805,11 @@
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f4xx_hal_msp.c</FilePath>
             </File>
+            <File>
+              <FileName>SX126x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\SX126x.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
